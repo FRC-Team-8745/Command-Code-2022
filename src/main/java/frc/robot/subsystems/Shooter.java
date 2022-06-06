@@ -4,6 +4,7 @@ import com.revrobotics.CANSparkMax;
 //import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import static frc.robot.Constants.*;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -46,7 +47,7 @@ public class Shooter extends SubsystemBase {
 
 	// Sets the RPM of the shooter motor
 	public void setRPM(double rpm) {
-		shooter.setVoltage((rpm / kmaxRPM) * kbatteryMax);
+		m_shooter.setVoltage((rpm / kmaxRPM) * kbatteryMax);
 	}
 
 	public void setSpeed(double speed) {
