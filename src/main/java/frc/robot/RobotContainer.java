@@ -6,9 +6,12 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.ToggleIntake;
+import frc.robot.commands.Autonomous;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Intake.State;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj.Joystick;
 
 /**
@@ -19,13 +22,18 @@ import edu.wpi.first.wpilibj.Joystick;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final Intake m_exampleSubsystem = new Intake();
+  private final Intake m_intake = new Intake();
 
-  private final ExampleCommand m_autoCommand = new Intake(m_intake);
+  private final Autonomous m_autoCommand = new Autonomous();
 
+
+  //The Driver's Controllers
+  private final XboxController m_operaterController = new XboxController(0);
+  private final Joystick m_driverController = new Joystick(1);
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the button bindings
+    
     configureButtonBindings();
   }
 
@@ -35,15 +43,23 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
-  private void configureButtonBindings() {}
+  private void configureButtonBindings() {
 
+    new JoystickButton(m_driverController, 3)
+      .whileActiveContinuous(new ToggleIntake(m_intake, State.IN), true)
+      .whenInactive(new ToggleIntake(m_intake, State.OFF), true);
+    new JoystickButton(m_driverController, 5)
+      .whileActiveContinuous(new ToggleIntake(m_intake, State.EX), true)
+      .whenInactive(new ToggleIntake(m_intake, State.OFF), true);
+    }
+    
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand() {
+  //public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return m_autoCommand;
-  }
+    //return m_autoCommand;
+  //}
 }

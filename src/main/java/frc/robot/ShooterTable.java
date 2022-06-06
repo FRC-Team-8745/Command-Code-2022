@@ -1,6 +1,7 @@
 package frc.robot;
 
 import frc.robot.LinearInterpolator;
+//TODO: Make the wait time so that it waits until it is between a minimum and maximum RPM speed instead of an average RPM speed
 
 public final class ShooterTable {
 	public static final double[][] shooterRPM = {
@@ -11,9 +12,9 @@ public final class ShooterTable {
 			{ 96, 3250 },
 			{ 108, 3500 },
 			{ 120, 3500 },
-			{ 121, 3750 },
+			{ 121, 3750  },
+			{ 144, 4500},
 			{ 132, 4500 },
-			{ 144, 4500 },
 			{ 156, 4500 },
 			{ 172, 5250 }
 	};
