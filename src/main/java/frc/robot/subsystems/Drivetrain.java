@@ -13,7 +13,10 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import static frc.robot.Constants.*;
 //TODO: TEST
+
+import javax.swing.text.Position;
 
 // Intake CAN ID = 4
 public class Drivetrain extends SubsystemBase {
@@ -26,37 +29,27 @@ public class Drivetrain extends SubsystemBase {
     private final double kP = 0.2;
     private final double kI = 0.0;
     private final double kD = 0.0;
-	private State state = State.OFF;
-    private Field2d field = new Field2d();
-    private DifferentialDriveOdometry odometry = new DifferentialDriveOdometry(gyroAngle)
+    private Field2d m_field = new Field2d();
+    private DifferentialDriveOdometry m_odometry = new DifferentialDriveOdometry(getGyro(), startPos());
     private PIDController leftController = new PIDController(kP, kI, kD);
 
-	public enum State {
-		FWD(1),
-		BWD(-1),
-		OFF(0);
-		public double speed;
-		private State(double speed) {
-			this.speed = speed;
-		}
-	}
+
 
 	public Drivetrain() {
-		m_left.setOpenLoopRampRate(0.5);
-		m_left.setIdleMode(IdleMode.kCoast);
-		m_left.restoreFactoryDefaults();
+        configNEO(m_right, true);
+        configNEO(m_left, false);
 	}
 
+    private void configNEO(CANSparkMax id, boolean isinverted ){
+        id.restoreFactoryDefaults();
+        id.setOpenLoopRampRate(0.5);
+		id.setIdleMode(IdleMode.kCoast);
+        id.setInverted(isinverted);
+    }
 	@Override
 	public void periodic() {
-		m_left.set(state.speed);
-
 		// This method will be called once per scheduler run
-
-	}
-
-	public void setState(State state) {
-		this.state = state;
+        m_odometry.update(getGyro(), leftDistanceMeters, rightDistanceMeters);
 	}
 
 	public void setSpeed(double speed) {
@@ -70,8 +63,15 @@ public class Drivetrain extends SubsystemBase {
 	public void stop() {
 		m_left.setVoltage(0);
 	}
-    public double getGyro(){
-        Rotation2d rotate = new Rotation2d();
-        
+    public Rotation2d getGyro(){
+        Rotation2d rotate = new Rotation2d(Math.toRadians(-imu.getYaw() + kRobotStartRotY));
+        return rotate;
+    }
+    public Pose2d startPos(){
+        Pose2d xy = new Pose2d(kRobotStartPosX, kRobotStartPosY, getGyro());
+        return xy;
+    }
+    public double RotationToMeters(RelativeEncoder encoder){
+        return (((encoder.getPosition() * Math.PI) / kDriveGearbox) * 6) / 39.37;
     }
 }

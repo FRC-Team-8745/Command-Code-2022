@@ -27,9 +27,9 @@ public class Intake extends SubsystemBase {
 	}
 
 	public Intake() {
+		m_intake.restoreFactoryDefaults();
 		m_intake.setOpenLoopRampRate(0.5);
 		m_intake.setIdleMode(IdleMode.kCoast);
-		m_intake.restoreFactoryDefaults();
 	}
 
 	@Override

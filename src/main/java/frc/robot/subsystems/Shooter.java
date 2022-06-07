@@ -31,9 +31,9 @@ public class Shooter extends SubsystemBase {
 	}
 
 	public Shooter() {
+		m_shooter.restoreFactoryDefaults();
 		m_shooter.setOpenLoopRampRate(0.2);
 		m_shooter.setIdleMode(IdleMode.kCoast);
-		m_shooter.restoreFactoryDefaults();
 	}
 
 	@Override
