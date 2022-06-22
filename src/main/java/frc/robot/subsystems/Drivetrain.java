@@ -49,7 +49,7 @@ public class Drivetrain extends SubsystemBase {
 	@Override
 	public void periodic() {
 		// This method will be called once per scheduler run
-        m_odometry.update(getGyro(), leftDistanceMeters, rightDistanceMeters);
+        //m_odometry.update(getGyro(), leftDistanceMeters, rightDistanceMeters);
 	}
 
 	public void setSpeed(double speed) {
