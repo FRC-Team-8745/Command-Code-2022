@@ -6,6 +6,7 @@ import frc.robot.subsystems.Drivetrain;
 
 public class DrivetrainControll extends CommandBase{
     private final Drivetrain drive;
+
     public DrivetrainControll(Drivetrain drive) {
       this.drive = drive;
       addRequirements(this.drive);
@@ -21,6 +22,5 @@ public class DrivetrainControll extends CommandBase{
     // Called once after isFinished returns true
     @Override
     public void end(boolean interrupted) {
-      drive.stop();
     }
 }
