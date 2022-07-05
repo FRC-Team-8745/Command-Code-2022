@@ -77,4 +77,9 @@ public class Constants {
 
 	// Auto code to run
 	public static final int autoToRun = 0;
+
+	public class DriverConstants {
+		public static final int kDrivetrainAxisForward = 1;
+		public static final int kDrivetrainAxisTurn = 0;
+	}
 }

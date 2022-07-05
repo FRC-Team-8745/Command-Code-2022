@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.ToggleIntake;
 //import frc.robot.commands.Autonomous;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.Climber.ClimberState;
 import frc.robot.subsystems.Intake.State;
 //import edu.wpi.first.wpilibj2.command.Command;
@@ -17,6 +18,9 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.commands.ToggleClimbers;
 import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Drivetrain;
+import frc.robot.commands.DrivetrainControll;
+import static frc.robot.Constants.DriverConstants.*;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -31,6 +35,8 @@ public class RobotContainer {
 	// The robot's subsystems and commands are defined here...
 	private final Intake m_intake = new Intake();
 	private final Climber m_climber = new Climber();
+	private final Drivetrain m_drivetrain = new Drivetrain();
+	private final Turret m_turret = new Turret();
 
 	//private final Autonomous m_autoCommand = new Autonomous();
 
@@ -43,8 +49,11 @@ public class RobotContainer {
 	 */
 	public RobotContainer() {
 		// Configure the button bindings
-
 		configureButtonBindings();
+		m_drivetrain.setDefaultCommand(
+			new DrivetrainControll(m_drivetrain, () -> m_driverController.getRawAxis(kDrivetrainAxisForward), 
+			() -> m_driverController.getRawAxis(kDrivetrainAxisTurn))
+		);
 	}
 
 	/*

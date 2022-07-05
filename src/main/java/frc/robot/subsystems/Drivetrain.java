@@ -1,10 +1,12 @@
 package frc.robot.subsystems;
 
+// Spark Max Imports
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+// Other Imports (PID, Portd, odometry, feild, etc)
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -17,8 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import static frc.robot.Constants.*;
-//TODO: TEST
-
+// TODO: TEST
 
 // Intake CAN ID = 4
 public class Drivetrain extends SubsystemBase {
@@ -36,12 +37,10 @@ public class Drivetrain extends SubsystemBase {
     private PIDController leftController = new PIDController(kP, kI, kD);
     private final DifferentialDrive m_drive = new DifferentialDrive(m_left, m_right);
 
-
 	public Drivetrain() {
-        configNEO(m_right, true);
-        configNEO(m_left, false);
+        configNEO(m_right, false);
+        configNEO(m_left, true);
 	}
-
     private void configNEO(CANSparkMax id, boolean isinverted ){
         id.restoreFactoryDefaults();
         id.setOpenLoopRampRate(0.5);
@@ -59,11 +58,9 @@ public class Drivetrain extends SubsystemBase {
 	public void setSpeed(double speed) {
 		m_left.set(speed);
 	}
-
 	public void setVoltage(double volts) {
 		m_left.setVoltage(volts);
 	}
-
 	public void stop() {
 		m_left.setVoltage(0);
         m_right.setVoltage(0);
@@ -83,7 +80,7 @@ public class Drivetrain extends SubsystemBase {
         return m_odometry.getPoseMeters();
     }
     public void arcadeDrive(double fwd, double sideways){
-        m_drive.arcadeDrive(fwd, sideways);
+        m_drive.arcadeDrive(fwd, -sideways);
     }
     public void setMaxOutput(double maxOutput){
         m_drive.setMaxOutput(maxOutput);
