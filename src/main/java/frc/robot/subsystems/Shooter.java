@@ -1,69 +1,100 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import static frc.robot.Constants.*;
 import static frc.robot.ShooterTable.*;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-// Intake CAN ID = 4
+// Shooter CAN ID = 3
+// Loader PWM Port = 0
 public class Shooter extends SubsystemBase {
 	// Calling our variables
-	private final CANSparkMax m_shooter = new CANSparkMax(4, MotorType.kBrushless);
-	private final RelativeEncoder m_shooterEncoder = m_shooter.getEncoder();
-	private State state = State.OFF;
+	private final CANSparkMax m_shooter = new CANSparkMax(3, MotorType.kBrushless);
+	private LoaderState loaderState = LoaderState.OFF;
+	private final Spark m_loader = new Spark(0);
+	private ShooterState shooterState = ShooterState.STOP;
 
-	public enum State {
-		SHOOT(3000, "SHOOT"),
-		UNLOAD(-1135, "UNLOAD"),
-		OFF(0, "OFF");
+	public enum LoaderState {
+		LOAD(1),
+		UNLOAD(-1),
+		OFF(0);
 
 		public double speed;
-        public String string;
-		private State(double speed, String string) {
+
+		private LoaderState(double speed) {
 			this.speed = speed;
-            this.string = string;
 		}
 	}
 
+	public enum ShooterState {
+		SHOOT, UNSHOOT, STOP;
+	}
+
 	public Shooter() {
+		m_loader.setInverted(true);
 		m_shooter.restoreFactoryDefaults();
 		m_shooter.setOpenLoopRampRate(0.2);
 		m_shooter.setIdleMode(IdleMode.kCoast);
+		m_shooter.setInverted(true);
 	}
 
 	@Override
 	public void periodic() {
-		setRPM(state.speed);
-        SmartDashboard.putString("Shooter State", state.string);
-        SmartDashboard.putNumber("Shooter Speed", getRPM());
+		setLoaderSpeed(loaderState.speed);
+		//SmartDashboard.putNumber("Shooter Speed", getRPM());
 		// This method will be called once per scheduler run
-
+		updateShooter(shooterState);
 	}
 
-	public void setState(State state) {
-		this.state = state;
+	public void setLoaderState(LoaderState loaderState) {
+		this.loaderState = loaderState;
+	}
+
+	public void setShooterState(ShooterState shooterState) {
+		this.shooterState = shooterState;
 	}
 
 	// Sets the RPM of the shooter motor
-	public void setRPM(double rpm) {
+	private void setRPM(double rpm) {
 		m_shooter.setVoltage((rpm / kmaxRPM) * kbatteryMax);
 	}
 
-	public void setVoltage(double volts) {
-		m_shooter.setVoltage(volts);
+	private void stop() {
+		m_shooter.stopMotor();
 	}
 
-	public void stop() {
-		m_shooter.setVoltage(0);
+
+	private void setLoaderSpeed(double speed) {
+		m_loader.set(speed);
 	}
-    public double getRPM() {
-        return 
-        m_shooterEncoder.getVelocity();
-        
-    }
+
+	private double calculateSpeed() {
+		if (Turret.hasTarget())
+			return shooterRPMInterpolator.getInterpolatedValue(Turret.getDistance());
+		else
+			return shooterRPMInterpolator.getInterpolatedValue(Drivetrain.distanceToHub);
+	}
+
+	private void updateShooter(ShooterState stateUpdate) {
+		switch (stateUpdate) {
+			case SHOOT:
+				setRPM(this.calculateSpeed());
+				break;
+			case UNSHOOT:
+				this.setRPM(-1135);
+				break;
+			case STOP:
+				this.stop();
+				break;
+		}
+	}
+
+	public double getTimeBetweenShots() {
+		return shooterTimingInterpolator.getInterpolatedValue(Turret.getDistance());
+	}
+
 }

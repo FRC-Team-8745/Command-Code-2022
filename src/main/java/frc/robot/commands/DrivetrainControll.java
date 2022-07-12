@@ -40,6 +40,5 @@ public class DrivetrainControll extends CommandBase {
 	// Called once after isFinished returns true
 	@Override
 	public void end(boolean interrupted) {
-		drivetrain.stop();
 	}
 }

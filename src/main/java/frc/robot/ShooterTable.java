@@ -1,19 +1,19 @@
 package frc.robot;
 
 
-//TODO: Make the wait time so that it waits until it is between a minimum and maximum RPM speed instead of an average RPM speed
+
 
 public final class ShooterTable {
 	public static final double[][] shooterRPM = {
-			{ 48, 3000 },
-			{ 60, 3000 },
-			{ 72, 3000 },
-			{ 84, 3250 },
-			{ 96, 3250 },
+			{ 48, 3000  },
+			{ 60, 3000  },
+			{ 72, 3000  },
+			{ 84, 3250  },
+			{ 96, 3250  },
 			{ 108, 3500 },
 			{ 120, 3500 },
-			{ 121, 3750  },
-			{ 144, 4500},
+			{ 121, 3750 },
+			{ 144, 4500 },
 			{ 132, 4500 },
 			{ 156, 4500 },
 			{ 172, 5250 }
@@ -22,9 +22,9 @@ public final class ShooterTable {
 	public static final double[][] linearActuatorAngle = {
 			{ 48, 0.125 },
 			{ 60, 0.125 },
-			{ 72, 0.2 },
-			{ 84, 0.2 },
-			{ 96, 0.25 },
+			{ 72, 0.2   },
+			{ 84, 0.2   },
+			{ 96, 0.25  },
 			{ 108, 0.25 },
 			{ 120, 0.35 },
 			{ 132, 0.35 },
@@ -57,7 +57,7 @@ public final class ShooterTable {
 			{ 144, 3 },
 			{ 156, 4 }
 	};
-
+	
 	public static final LinearInterpolator shooterRPMInterpolator = new LinearInterpolator(shooterRPM);
 	public static final LinearInterpolator linearActuatorInterpolator = new LinearInterpolator(linearActuatorAngle);
 	public static final LinearInterpolator shooterRampInterpolator = new LinearInterpolator(shooterRampTime);

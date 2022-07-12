@@ -1,13 +1,10 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
-//import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
-//TODO: TEST
 
 // Intake CAN ID = 4
 public class Intake extends SubsystemBase {
@@ -20,7 +17,9 @@ public class Intake extends SubsystemBase {
 		IN(0.5),
 		EX(-1),
 		OFF(0);
+
 		public double speed;
+
 		private State(double speed) {
 			this.speed = speed;
 		}
@@ -35,24 +34,10 @@ public class Intake extends SubsystemBase {
 	@Override
 	public void periodic() {
 		m_intake.set(state.speed);
-
-		// This method will be called once per scheduler run
-
 	}
 
 	public void setState(State state) {
 		this.state = state;
 	}
 
-	public void setSpeed(double speed) {
-		m_intake.set(speed);
-	}
-
-	public void setVoltage(double volts) {
-		m_intake.setVoltage(volts);
-	}
-
-	public void stop() {
-		m_intake.setVoltage(0);
-	}
 }

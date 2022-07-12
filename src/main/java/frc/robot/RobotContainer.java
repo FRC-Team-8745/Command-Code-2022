@@ -9,18 +9,21 @@ import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.ToggleIntake;
 //import frc.robot.commands.Autonomous;
 import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.Climber.ClimberState;
 import frc.robot.subsystems.Intake.State;
+import frc.robot.subsystems.Shooter;
 //import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.Load;
+import frc.robot.commands.Shoot;
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.commands.ToggleClimbers;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.commands.DrivetrainControll;
 import static frc.robot.Constants.DriverConstants.*;
+import frc.robot.commands.Unload;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -36,9 +39,9 @@ public class RobotContainer {
 	private final Intake m_intake = new Intake();
 	private final Climber m_climber = new Climber();
 	private final Drivetrain m_drivetrain = new Drivetrain();
-	private final Turret m_turret = new Turret();
+	private final Shooter m_shooterFile = new Shooter();
 
-	//private final Autonomous m_autoCommand = new Autonomous();
+	// private final Autonomous m_autoCommand = new Autonomous();
 
 	// The Driver's Controllers
 	private final XboxController m_operaterController = new XboxController(0);
@@ -51,19 +54,18 @@ public class RobotContainer {
 		// Configure the button bindings
 		configureButtonBindings();
 		m_drivetrain.setDefaultCommand(
-			new DrivetrainControll(m_drivetrain, () -> m_driverController.getRawAxis(kDrivetrainAxisForward), 
-			() -> m_driverController.getRawAxis(kDrivetrainAxisTurn))
-		);
+				new DrivetrainControll(m_drivetrain, () -> m_driverController.getRawAxis(kDrivetrainAxisForward),
+						() -> m_driverController.getRawAxis(kDrivetrainAxisTurn)));
 	}
 
-	/*
+	/** 
 	 * Use this method to define your button->command mappings. Buttons can be
 	 * created by
 	 * instantiating a {@link GenericHID} or one of its subclasses ({@link
 	 * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing
 	 * it to a {@link
 	 * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
-	 */
+	 **/
 	private void configureButtonBindings() {
 		// Intake on
     	new JoystickButton(m_driverController, 3)
@@ -74,6 +76,18 @@ public class RobotContainer {
     	new JoystickButton(m_driverController, 5)
     	  .whileActiveContinuous(new ToggleIntake(m_intake, State.EX), true)
     	  .whenInactive(new ToggleIntake(m_intake, State.OFF), true);
+
+		//Load
+		new JoystickButton(m_operaterController, 2)
+		.whenPressed(new Load(m_shooterFile), false);
+		
+		// Shoot
+		new JoystickButton(m_operaterController, 8)
+		.whenPressed(new Shoot(m_shooterFile), false);
+
+		//Unload
+		new JoystickButton(m_operaterController, 4)
+		.whenPressed(new Unload(m_shooterFile), false);
 
 		// Climbers up
 		new Trigger(() -> {return m_operaterController.getPOV() == 0;})
